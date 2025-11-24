@@ -11,12 +11,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
         $stmt = $pdo->prepare('DELETE FROM applicants WHERE id = :id');
         $stmt->execute([':id' => $id]);
+        try {
+            $countStmt = $pdo->query('SELECT COUNT(*) FROM applicants');
+            $count = (int) $countStmt->fetchColumn();
+            if ($count === 0) {
+                $pdo->exec('ALTER TABLE applicants AUTO_INCREMENT = 1');
+            }
+        } catch (Exception $e) {
+            // ignore; resetting auto_increment is optional and may require privileges
+        }
     }
     header('Location: index.php');
     exit;
 }
-
-// fetch record for display
 $stmt = $pdo->prepare('SELECT * FROM applicants WHERE id = :id');
 $stmt->execute([':id' => $id]);
 $record = $stmt->fetch();

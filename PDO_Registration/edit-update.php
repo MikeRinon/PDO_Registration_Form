@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 } else {
-    // populate form with existing values
     $first = $record['first_name'];
     $last = $record['last_name'];
     $profession = $record['profession'];
