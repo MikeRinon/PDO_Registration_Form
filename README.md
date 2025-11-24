@@ -12,7 +12,7 @@
 - `db.php` - PDO connection (update credentials if needed).
 - `index.php` - List and search records.
 - `create.php` - Add new applicant.
-- `edit-update.php` - Edit / Update an applicant (renamed from `edit.php`).
+- `edit-update.php` - Edit / Update an applicant.
 - `delete.php` - Confirm and delete an applicant.
 - `styles.css` - Basic styles.
 - `schema.sql` - SQL to create database and `applicants` table.
