@@ -1,14 +1,24 @@
 <?php
 require_once __DIR__ . '/db.php';
 
-$search = $_GET['search'] ?? null;
-if ($search) {
-    $stmt = $pdo->prepare("SELECT * FROM applicants WHERE first_name LIKE :q OR last_name LIKE :q OR profession LIKE :q ORDER BY date_added DESC");
-    $stmt->execute([':q' => "%$search%"]);
-} else {
-    $stmt = $pdo->query("SELECT * FROM applicants ORDER BY date_added DESC");
+$search = '';
+if (isset($_GET['search'])) {
+    $search = trim((string) $_GET['search']);
 }
-$rows = $stmt->fetchAll();
+
+try {
+    if ($search !== '') {
+        $stmt = $pdo->prepare("SELECT * FROM applicants WHERE first_name LIKE ? OR last_name LIKE ? OR profession LIKE ? ORDER BY date_added DESC");
+        $like = "%{$search}%";
+        $stmt->execute([$like, $like, $like]);
+    } else {
+        $stmt = $pdo->query("SELECT * FROM applicants ORDER BY date_added DESC");
+    }
+    $rows = $stmt->fetchAll();
+} catch (PDOException $e) {
+    echo '<div style="color:#900;background:#fee;padding:10px;border:1px solid #900">Database error: ' . htmlspecialchars($e->getMessage()) . '</div>';
+    $rows = [];
+}
 ?>
 <!doctype html>
 <html lang="en">
